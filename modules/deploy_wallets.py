@@ -56,11 +56,12 @@ class DeployWallets:
                 logger.info(f"Sleeping before next deploy for {deploy_sleep}sec.")
                 time.sleep(deploy_sleep)
 
+        logger.info(f"All wallets were attempted to deploy. Failed: {len(current_deploy_failed_wallets)}. Success: {len(current_deploy_success_wallets)}")
+
         if len(current_deploy_success_wallets) != 0:
             current_deploy_success_wallets.insert(0, str(datetime.now()))
             current_deploy_success_wallets.append("")
 
-        logger.info(f"All wallets were attempted to deploy. Failed: {len(current_deploy_failed_wallets)}. Success: {len(current_deploy_success_wallets)}")
         logger.info(f"Saving failed wallets to {DEPLOY_FAILED_WALLETS_JSON_PATH}")
         write_to_json(DEPLOY_FAILED_WALLETS_JSON_PATH, current_deploy_failed_wallets)
         logger.info(f"Saving success wallets to {DEPLOYED_WALLETS_TXT_PATH}")
