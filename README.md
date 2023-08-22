@@ -1,4 +1,4 @@
-![5.png](images%2F5.png)
+![sybilvzakonebg.png](images%2Fsybilvzakonebg.png)
 #### *Описание:*
 
 Скрипт имеет 5 модулей:
