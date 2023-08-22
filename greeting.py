@@ -13,7 +13,7 @@ def greeting_message():
     Modules:
     1: generate_wallets                                  | Generate ArgentX wallets
     2: deploy_wallets                                    | Deploy ArgentX wallets
-    3: export_wallets                                    | Export ArgentX wallets from data-files to Excel files
+    3: export_wallets                                    | Export ArgentX wallets from data-files to Excel file
     0: exit                                              | Exit
     '''
     logger.debug(start_message)
