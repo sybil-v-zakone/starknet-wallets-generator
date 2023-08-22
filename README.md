@@ -1,4 +1,6 @@
 ![sybilvzakonebg.png](images%2Fsybilvzakonebg.png)
+# Starknet Wallet Generator
+
 #### *Описание:*
 
 Скрипт имеет 5 модулей:
