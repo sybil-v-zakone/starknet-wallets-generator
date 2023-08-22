@@ -6,8 +6,7 @@ modules_map = {
     "0": [exit],
     "1": [GenerateWallets.generate],
     "2": [DeployWallets.deploy],
-    "3": [GenerateWallets.generate, DeployWallets.deploy],
-    "4": [ExportWallets.export]
+    "3": [ExportWallets.export]
 }
 
 
