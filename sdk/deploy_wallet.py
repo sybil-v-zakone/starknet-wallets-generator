@@ -1,3 +1,5 @@
+import random
+
 from loguru import logger
 from starknet_py.hash.selector import get_selector_from_name
 from starknet_py.net.account.account import Account
@@ -16,7 +18,8 @@ def prepare_deploy(func):
         if not config.SHOULD_WITHDRAW_FOR_DEPLOY:
             return await func(self, key_pair, address)
 
-        withdraw_status = okx_withdraw(address, config.WITHDRAW_FOR_DEPLOY_ETH_AMOUNT)
+        withdraw_amount = random.uniform(*config.WITHDRAW_FOR_DEPLOY_ETH_AMOUNT)
+        withdraw_status = okx_withdraw(address, withdraw_amount)
         if not withdraw_status:
             return False
         initial_balance = await check_account_balance(self.chain, self.client, address, key_pair)
