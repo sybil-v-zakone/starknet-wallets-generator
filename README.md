@@ -20,7 +20,7 @@
 Все настройки находятся в файле `config.py`
 
 - `ENDLESS_MENU` Установите значение `True`, если вы хотите, чтобы после отработки выбранного модуля опять появлялось меню
-- `WALLETS_TO_GENERATE_COUNT` Количество генерируемых кошельков.
+- `WALLETS_TO_GENERATE_COUNT` Количество генерируемых кошельков
 - `GENERATED_WALLETS_JSON_PATH` Путь для сохранения сгенерированных кошельков в формате JSON
 - `GENERATED_WALLETS_EXCEL_PATH` Путь для сохранения сгенерированных кошельков в формате Excel
 - `DEPLOY_SLEEP_DEVIATION_IN_SEC` Диапазон `(от, до)` времени задержки (в секундах) между деплоями
@@ -39,5 +39,6 @@
 - `STARKNET_CHAIN_ID` ID сети в Starknet, разрешенные значения: `StarknetChainId.TESTNET`, `StarknetChainId.TESTNET2` или `StarknetChainId.MAINNET`
 
 #### *Запуск:*
-Для запуска скрипта в консоль нужно написать: `python main.py`, после чего перед вами появится выбор модулей:
+Для запуска скрипта в консоль нужно написать: `python main.py`, после чего перед вами появится выбор модулей
+
 ![1.png](images%2F1.png)
