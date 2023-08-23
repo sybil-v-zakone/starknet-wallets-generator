@@ -20,6 +20,9 @@
 4. `pip install -r requirements.txt`
 
 #### *Настройка:*
+Для Windows воспользуйтесь данной инструкцией:
+
+https://sybil-v-zakone.notion.site/sybil-v-zakone/starknet-py-578a3b2fb96e49149a52b987cbbb8c73
 
 Все настройки находятся в файле `config.py`
 
