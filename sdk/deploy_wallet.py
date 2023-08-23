@@ -65,7 +65,7 @@ class DeployWallet:
         )
 
         logger.info(
-            f"Sent a deploy tx for wallet {address} -> {constants.STARKSCAN_URL}/{account_deployment_result.hash}")
+            f"{constants.STARKSCAN_URL}/{hex(account_deployment_result.hash)}")
         if await account_deployment_result.wait_for_acceptance():
             logger.success(f"Wallet {address} successfully deployed")
             return account_deployment_result
