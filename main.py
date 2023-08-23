@@ -42,7 +42,7 @@ async def startup():
                 exit()
 
     except Exception as e:
-        logger.exception(e)
+        logger.error(e)
 
 
 asyncio.run(startup())
