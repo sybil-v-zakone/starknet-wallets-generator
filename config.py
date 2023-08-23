@@ -2,7 +2,7 @@ from starknet_py.net.models.chains import StarknetChainId
 
 ENDLESS_MENU = True
 
-WALLETS_TO_GENERATE_COUNT = 5
+WALLETS_TO_GENERATE_COUNT = 1
 
 GENERATED_WALLETS_JSON_PATH = "data/internal/generated_wallets.json"
 DEPLOYED_WALLETS_TXT_PATH = "data/internal/deployed_wallets.txt"
@@ -31,3 +31,9 @@ WAIT_FOR_TOPUP_FROM_CEX_ATTEMPTS = -1  # если меньше 0, то беск�
 
 STARKNET_NETWORK = "mainnet"  # testnet | testnet2 | mainnet
 STARKNET_CHAIN_ID = StarknetChainId.MAINNET  # | TESTNET | TESTNET2 | MAINNET
+
+CLIENT_ON_ERROR_TOTAL_TRIES = 5
+CLIENT_ON_ERROR_SLEEP_IN_SEC = 20
+
+GAS_THRESHOLD = 40
+GAS_DELAY_RANGE = [10, 15]

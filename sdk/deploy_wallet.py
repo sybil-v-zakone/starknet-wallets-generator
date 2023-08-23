@@ -11,11 +11,12 @@ import config
 import constants
 from sdk.cex import okx_withdraw
 from sdk.topup_waiter import check_account_balance, wait_for_topup
+from sdk.gas import gas_delay
 
 
 def prepare_deploy(func):
-    async def wrapper(self, key_pair: KeyPair, address):
-        if not config.SHOULD_WITHDRAW_FOR_DEPLOY:
+    async def wrapper(self, key_pair: KeyPair, address, should_skip_withdraw = True):
+        if not config.SHOULD_WITHDRAW_FOR_DEPLOY or should_skip_withdraw:
             return await func(self, key_pair, address)
 
         withdraw_amount = random.uniform(*config.WITHDRAW_FOR_DEPLOY_ETH_AMOUNT)
@@ -40,6 +41,7 @@ class DeployWallet:
         self.client = GatewayClient(net=network)
 
     @prepare_deploy
+    @gas_delay(gas_threshold=config.GAS_THRESHOLD, delay_range=config.GAS_DELAY_RANGE)
     async def deploy(self, key_pair: KeyPair, address):
         await check_account_balance(self.chain, self.client, address, key_pair)
 
