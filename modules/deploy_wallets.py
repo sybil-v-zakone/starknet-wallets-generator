@@ -46,8 +46,8 @@ class DeployWallets:
             key_pair = KeyPair.from_private_key(int(wallet.private_key, 16))
 
             deploy_attempt = 1
-            try:
-                while True:
+            while True:
+                try:
                     if deploy_attempt > CLIENT_ON_ERROR_TOTAL_TRIES:
                         logger.info("Reached maximum attempts for wallet deploy. Skipping")
                         current_deploy_failed_wallets.append(wallet_json)
@@ -66,11 +66,12 @@ class DeployWallets:
                         bar.next()
                         current_deploy_success_wallets.append(wallet.address)
                         break
-            except ClientError as e:
-                logger.error(
-                    f"Starknet client error {e.message}. Sleeping for {CLIENT_ON_ERROR_SLEEP_IN_SEC}sec. Trying another attempt")
-                time.sleep(CLIENT_ON_ERROR_SLEEP_IN_SEC)
-                deploy_attempt = deploy_attempt + 1
+                except ClientError as e:
+                    logger.error(
+                        f"Starknet client error {e.message}. Sleeping for {CLIENT_ON_ERROR_SLEEP_IN_SEC}sec. Trying another attempt")
+                finally:
+                    deploy_attempt = deploy_attempt + 1
+                    time.sleep(CLIENT_ON_ERROR_SLEEP_IN_SEC)
 
             if index:
                 deploy_sleep = DeployWallets.get_deploy_sleep_time()
