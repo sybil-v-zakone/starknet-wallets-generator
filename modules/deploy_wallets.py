@@ -69,6 +69,10 @@ class DeployWallets:
                 except ClientError as e:
                     logger.error(
                         f"Starknet client error {e.message}. Sleeping for {CLIENT_ON_ERROR_SLEEP_IN_SEC}sec. Trying another attempt")
+                except Exception as e:
+                    logger.error(
+                        f"Unexpected error. Sleeping for {CLIENT_ON_ERROR_SLEEP_IN_SEC}sec. Trying another attempt"
+                    )
                 finally:
                     deploy_attempt = deploy_attempt + 1
                     time.sleep(CLIENT_ON_ERROR_SLEEP_IN_SEC)
