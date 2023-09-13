@@ -4,7 +4,6 @@ from eth_account.hdaccount import (
     key_from_seed
 )
 from starknet_py.hash.address import compute_address
-from starknet_py.hash.selector import get_selector_from_name
 from starknet_py.net.signer.stark_curve_signer import KeyPair
 
 import constants
@@ -48,9 +47,6 @@ def get_stark_pair(private_key):
 
 def build_constructor_calldata(public_key):
     return [
-        int(constants.ACCOUNT_CLASS_HASH),
-        get_selector_from_name('initialize'),
-        2,
         int(public_key, 16),
         0
     ]
@@ -58,7 +54,7 @@ def build_constructor_calldata(public_key):
 
 def calculate_argent_address(public_key, constructor_call_data):
     return compute_address(
-        class_hash=int(constants.PROXY_CLASS_HASH),
+        class_hash=int(constants.ACCOUNT_CLASS_HASH),
         constructor_calldata=constructor_call_data,
         salt=int(public_key, 16),
         deployer_address=0

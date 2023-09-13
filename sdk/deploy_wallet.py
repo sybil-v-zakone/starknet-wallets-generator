@@ -1,7 +1,6 @@
 import random
 
 from loguru import logger
-from starknet_py.hash.selector import get_selector_from_name
 from starknet_py.net.account.account import Account
 from starknet_py.net.gateway_client import GatewayClient
 from starknet_py.net.models.chains import StarknetChainId
@@ -45,23 +44,20 @@ class DeployWallet:
     async def deploy(self, key_pair: KeyPair, address):
         await check_account_balance(self.chain, self.client, address, key_pair)
 
-        calldata = [key_pair.public_key, 0]
         constructor_calldata = [
-            constants.ACCOUNT_CLASS_HASH,
-            get_selector_from_name("initialize"),
-            len(calldata),
-            *calldata,
+            key_pair.public_key,
+            0
         ]
 
         account_deployment_result = await Account.deploy_account(
             address=int(address, 16),
-            class_hash=constants.PROXY_CLASS_HASH,
+            class_hash=constants.ACCOUNT_CLASS_HASH,
             salt=key_pair.public_key,
             key_pair=key_pair,
             client=self.client,
             chain=self.chain,
             constructor_calldata=constructor_calldata,
-            auto_estimate=True,
+            auto_estimate=True
         )
 
         logger.info(

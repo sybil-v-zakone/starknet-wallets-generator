@@ -5,5 +5,5 @@ openpyxl==3.1.2
 pandas==2.0.3
 progress==1.6
 python-dotenv==1.0.0
-starknet_py==0.17.1
+starknet_py==0.18.1
 web3==6.8.0
