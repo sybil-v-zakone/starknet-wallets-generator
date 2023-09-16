@@ -15,7 +15,7 @@ OKX_WITHDRAW_OPTIONS = {
         "INTERNAL_TRANSFER": 3,
         "ON_CHAIN": 4
     },
-    "network": "StarkNet",
+    "network": "Starknet",
     "symbol_withdraw": "ETH"
 }
 
