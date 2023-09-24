@@ -1,7 +1,10 @@
 ![sybilvzakonebg.png](images%2Fsybilvzakonebg.png)
 # Starknet Wallet Generator
 
-#### *Описание:*
+### *Disclaimer:*
+Скрипт деплоит кошельки версии Cairo 1. Версия, которая деплоит Cairo 0 кошельки находится в Releases.
+
+####  *Описание:*
 
 Скрипт имеет 4 модуля:
 1. `generate_wallets` создает **ArgentX** кошельки
