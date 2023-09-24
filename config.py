@@ -8,6 +8,12 @@ GENERATED_WALLETS_JSON_PATH = "data/internal/generated_wallets.json"
 DEPLOYED_WALLETS_TXT_PATH = "data/internal/deployed_wallets.txt"
 DEPLOY_FAILED_WALLETS_JSON_PATH = "data/internal/deploy_failed_wallets.json"
 
+# путь к файлу с прокси
+PROXIES_TXT_PATH = "data/proxies.txt"
+
+# если вы используете прокси, то ставить True, в противном случае - False
+USE_PROXY = False
+
 WALLETS_EXCEL_PATH = "data/wallets.xlsx"
 
 LOAD_OKX_API_CONFIG_FROM_ENV = False

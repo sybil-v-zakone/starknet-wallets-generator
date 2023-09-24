@@ -1,5 +1,8 @@
 import random
 
+from aiohttp import ClientSession
+from aiohttp_socks import ProxyConnector
+
 from loguru import logger
 from starknet_py.net.account.account import Account
 from starknet_py.net.gateway_client import GatewayClient
@@ -34,14 +37,45 @@ def prepare_deploy(func):
 
 
 class DeployWallet:
-    def __init__(self, network: str = config.STARKNET_NETWORK, chain: StarknetChainId = config.STARKNET_CHAIN_ID):
+    def __init__(
+            self,
+            network: str = config.STARKNET_NETWORK,
+            chain: StarknetChainId = config.STARKNET_CHAIN_ID,
+            proxy: str = None
+    ):
         self.network = network
         self.chain = chain
-        self.client = GatewayClient(net=network)
+        self.proxy = proxy
+        self.session = None
+        self.client = self._get_client()
+
+    def _get_client(self):
+        if self.proxy:
+            self.session = ClientSession(connector=ProxyConnector.from_url(f'http://{self.proxy}'))
+
+        return GatewayClient(
+            net=self.network,
+            session=self.session
+        )
+    
+    async def _finalize_client(self):
+        if self.session:
+            await self.session.close()
+
+    async def log_ip(self):
+        try:
+            if self.session:
+                response = await self.session.get('https://ifconfig.me/ip')
+                parsed_response = await response.text()
+
+                logger.info(f'Your ip: {parsed_response.strip()}')
+        except Exception as e:
+            logger.error(f'Error occured while getting IP: {str(e)}')
 
     @prepare_deploy
     @gas_delay(gas_threshold=config.GAS_THRESHOLD, delay_range=config.GAS_DELAY_RANGE)
     async def deploy(self, key_pair: KeyPair, address):
+        await self.log_ip()
         await check_account_balance(self.chain, self.client, address, key_pair)
 
         constructor_calldata = [
@@ -62,9 +96,14 @@ class DeployWallet:
 
         logger.info(
             f"{constants.STARKSCAN_URL}/{hex(account_deployment_result.hash)}")
+        
+        result = None
         if await account_deployment_result.wait_for_acceptance():
             logger.success(f"Wallet {address} successfully deployed")
-            return account_deployment_result
+            result = account_deployment_result
         else:
             logger.error(f"Wallet {address} is failed to deploy")
-            return False
+            result = False
+
+        await self._finalize_client()
+        return result

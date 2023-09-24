@@ -7,12 +7,26 @@ from progress.bar import IncrementalBar
 from starknet_py.net.client_errors import ClientError
 from starknet_py.net.signer.stark_curve_signer import KeyPair
 
-from config import GENERATED_WALLETS_JSON_PATH, DEPLOY_FAILED_WALLETS_JSON_PATH, DEPLOYED_WALLETS_TXT_PATH, \
-    DEPLOY_SLEEP_DEVIATION_IN_SEC, WITHDRAW_FOR_DEPLOY_ETH_AMOUNT, CEX_WITHDRAW_FEE, CLIENT_ON_ERROR_TOTAL_TRIES, \
-    CLIENT_ON_ERROR_SLEEP_IN_SEC
+from config import (
+    GENERATED_WALLETS_JSON_PATH,
+    DEPLOY_FAILED_WALLETS_JSON_PATH,
+    DEPLOYED_WALLETS_TXT_PATH,
+    DEPLOY_SLEEP_DEVIATION_IN_SEC,
+    WITHDRAW_FOR_DEPLOY_ETH_AMOUNT,
+    CEX_WITHDRAW_FEE,
+    CLIENT_ON_ERROR_TOTAL_TRIES,
+    CLIENT_ON_ERROR_SLEEP_IN_SEC,
+    PROXIES_TXT_PATH,
+    USE_PROXY
+)
 from models.wallet import Wallet
 from sdk.deploy_wallet import DeployWallet
-from sdk.file import read_from_json, write_to_json, write_to_txt
+from sdk.file import (
+    read_from_json,
+    write_to_json,
+    read_from_txt,
+    write_to_txt
+)
 
 
 class DeployWallets:
@@ -23,7 +37,6 @@ class DeployWallets:
     @staticmethod
     async def deploy():
         logger.info("Running deploy ArgentX wallets")
-        deployer = DeployWallet()
         generated_wallets = read_from_json(GENERATED_WALLETS_JSON_PATH)
         previous_deploy_failed_wallets = read_from_json(DEPLOY_FAILED_WALLETS_JSON_PATH, True)
 
@@ -41,9 +54,15 @@ class DeployWallets:
         logger.info(
             f"All wallets will be topup for {WITHDRAW_FOR_DEPLOY_ETH_AMOUNT}ETH. CEX fee is {CEX_WITHDRAW_FEE}ETH")
         bar = IncrementalBar('Deployed wallets', max=len(current_deploy_wallets))
+
+        proxies = read_from_txt(PROXIES_TXT_PATH)
         for index, wallet_json in enumerate(current_deploy_wallets, 1 - len(current_deploy_wallets)):
             wallet = Wallet(**wallet_json)
             key_pair = KeyPair.from_private_key(int(wallet.private_key, 16))
+            deployer = DeployWallet(proxy=proxies[index] if USE_PROXY else None)
+
+            if USE_PROXY:
+                logger.info(f'Deploying with proxy: {proxies[index]}')
 
             deploy_attempt = 1
             while True:
