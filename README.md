@@ -2,8 +2,7 @@
 # Starknet Wallet Generator
 
 ### *Disclaimer:*
-Скрипт деплоит кошельки версии Cairo 1. Версия, которая деплоит Cairo 0 кошельки находится в Releases.
-https://github.com/sybil-v-zakone/starknet-wallets-generator/releases/tag/cairo_0
+Скрипт деплоит кошельки версии Cairo 1. Версия, которая деплоит Cairo 0 кошельки находится в Releases: https://github.com/sybil-v-zakone/starknet-wallets-generator/releases/tag/cairo_0
 
 ####  *Описание:*
 
