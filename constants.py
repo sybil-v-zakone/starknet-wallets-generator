@@ -35,3 +35,4 @@ WALLET_EXPORT_SHEETS = {
 }
 
 STARKSCAN_URL = 'https://starkscan.co/tx'
+STARKNET_GET_LAST_BLOCK_ENDPOINT = "https://alpha-mainnet.starknet.io/feeder_gateway/get_block?blockNumber=latest"

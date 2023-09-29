@@ -5,24 +5,25 @@ from functools import wraps
 from loguru import logger
 from web3 import Web3
 
-from constants import ETH_MAINNET_RPC
 from progress.bar import IncrementalBar
+from sdk.apis.gas_api import GasAPI
 
 
 def gas_delay(gas_threshold: int, delay_range: list):
     def decorator(func):
         @wraps(func)
-        def wrapper(*args, **kwargs):
+        def wrapper(self, *args, **kwargs):
+            gas_api = GasAPI(proxy=self.proxy)
             while True:
-                current_eth_gas_price = get_eth_gas_fee()
+                current_starknet_gas_price = gas_api.get_last_block_gas_price()
                 threshold = Web3.to_wei(gas_threshold, "gwei")
-                logger.info(current_eth_gas_price)
+                logger.info(current_starknet_gas_price)
                 logger.info(threshold)
-                if current_eth_gas_price > threshold:
+                if current_starknet_gas_price > threshold:
                     random_delay = random.randint(delay_range[0], delay_range[1])
 
                     logger.warning(
-                        f"Current gas fee '{current_eth_gas_price}' wei > Gas threshold '{threshold}' wei. Waiting for {random_delay} seconds..."
+                        f"Current STARKNET gas fee '{current_starknet_gas_price}' wei > Gas threshold '{threshold}' wei. Waiting for {random_delay} seconds..."
                     )
 
                     bar = IncrementalBar('Waiting:', max=random_delay)
@@ -31,14 +32,9 @@ def gas_delay(gas_threshold: int, delay_range: list):
                         bar.next()
                 else:
                     break
-
-            return func(*args, **kwargs)
+            gas_api.close_session()
+            return func(self, *args, **kwargs)
 
         return wrapper
 
     return decorator
-
-
-def get_eth_gas_fee():
-    w3 = Web3(Web3.HTTPProvider(ETH_MAINNET_RPC))
-    return w3.eth.gas_price
