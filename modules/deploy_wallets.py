@@ -17,7 +17,8 @@ from config import (
     CLIENT_ON_ERROR_TOTAL_TRIES,
     CLIENT_ON_ERROR_SLEEP_IN_SEC,
     PROXIES_TXT_PATH,
-    USE_PROXY
+    USE_PROXY,
+    WALLET_APPLICATION
 )
 from models.wallet import Wallet
 from sdk.deploy_wallet import DeployWallet
@@ -36,7 +37,7 @@ class DeployWallets:
 
     @staticmethod
     async def deploy():
-        logger.info("Running deploy ArgentX wallets")
+        logger.info(f"Running deploy {WALLET_APPLICATION} wallets")
         generated_wallets = read_from_json(GENERATED_WALLETS_JSON_PATH)
         previous_deploy_failed_wallets = read_from_json(DEPLOY_FAILED_WALLETS_JSON_PATH, True)
 

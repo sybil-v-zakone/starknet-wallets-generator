@@ -45,17 +45,14 @@ def get_stark_pair(private_key):
     return stark_pair
 
 
-def build_constructor_calldata(public_key):
-    return [
-        int(public_key, 16),
-        0
-    ]
 
-
-def calculate_argent_address(public_key, constructor_call_data):
+def calculate_argent_address(public_key):
     return compute_address(
-        class_hash=int(constants.ACCOUNT_CLASS_HASH),
-        constructor_calldata=constructor_call_data,
+        class_hash=int(constants.ARGENTX_ACCOUNT_CLASS_HASH),
+        constructor_calldata=[
+            int(public_key, 16),
+            0
+        ],
         salt=int(public_key, 16),
         deployer_address=0
     )

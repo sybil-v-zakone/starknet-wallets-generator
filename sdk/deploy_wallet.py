@@ -10,10 +10,13 @@ from starknet_py.net.models.chains import StarknetChainId
 from starknet_py.net.signer.stark_curve_signer import KeyPair
 
 import config
-import constants
 from sdk.cex import okx_withdraw
 from sdk.topup_waiter import check_account_balance, wait_for_topup
 from sdk.gas import gas_delay
+
+from sdk.argentx.deploy import ArgentDeploy
+from sdk.braavos.deploy import BraavosDeploy
+
 
 
 def prepare_deploy(func):
@@ -72,38 +75,28 @@ class DeployWallet:
         except Exception as e:
             logger.error(f'Error occured while getting IP: {str(e)}')
 
+    async def _get_deploy_provider(self):
+        if config.WALLET_APPLICATION not in ["argentx", "braavos"]:
+            logger.error("Wrong WALLET_APPLICATION. Run exit()")
+            exit()
+        if config.WALLET_APPLICATION == "argentx":
+            return ArgentDeploy
+        if config.WALLET_APPLICATION == "braavos":
+            return BraavosDeploy
+
     @prepare_deploy
     @gas_delay(gas_threshold=config.GAS_THRESHOLD, delay_range=config.GAS_DELAY_RANGE)
     async def deploy(self, key_pair: KeyPair, address):
         await self.log_ip()
         await check_account_balance(self.chain, self.client, address, key_pair)
 
-        constructor_calldata = [
-            key_pair.public_key,
-            0
-        ]
-
-        account_deployment_result = await Account.deploy_account(
-            address=int(address, 16),
-            class_hash=constants.ACCOUNT_CLASS_HASH,
-            salt=key_pair.public_key,
+        provider = await self._get_deploy_provider()
+        result = await provider.wallet_deploy(
             key_pair=key_pair,
-            client=self.client,
+            address=address,
             chain=self.chain,
-            constructor_calldata=constructor_calldata,
-            auto_estimate=True
+            client=self.client
         )
-
-        logger.info(
-            f"{constants.STARKSCAN_URL}/{hex(account_deployment_result.hash)}")
-        
-        result = None
-        if await account_deployment_result.wait_for_acceptance():
-            logger.success(f"Wallet {address} successfully deployed")
-            result = account_deployment_result
-        else:
-            logger.error(f"Wallet {address} is failed to deploy")
-            result = False
 
         await self._finalize_client()
         return result
