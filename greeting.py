@@ -30,9 +30,9 @@ def greeting_message():
      /____/                                                          
 
     Modules:
-    1: generate_wallets                                  | Generate ArgentX wallets
-    2: deploy_wallets                                    | Deploy ArgentX wallets
-    3: export_wallets                                    | Export ArgentX wallets from data-files to Excel file
+    1: generate_wallets                                  | Generate ArgentX/Braavos wallets
+    2: deploy_wallets                                    | Deploy ArgentX/Braavos wallets
+    3: export_wallets                                    | Export ArgentX/Braavos wallets from data-files to Excel file
     0: exit                                              | Exit
     '''
     logger.debug(start_message)
