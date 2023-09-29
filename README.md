@@ -2,7 +2,7 @@
 # Starknet Wallet Generator
 
 ### *Disclaimer:*
-Скрипт деплоит кошельки версии Cairo 1. Версия, которая деплоит Cairo 0 кошельки находится в Releases: https://github.com/sybil-v-zakone/starknet-wallets-generator/releases/tag/cairo_0
+Скрипт деплоит кошельки ArgentX версии Cairo 1 и Braavos версии Cairo 0. Версия, которая деплоит ArgentX Cairo 0 кошельки находится в Releases: https://github.com/sybil-v-zakone/starknet-wallets-generator/releases/tag/cairo_0
 
 ####  *Описание:*
 
@@ -31,6 +31,7 @@ https://sybil-v-zakone.notion.site/sybil-v-zakone/starknet-py-578a3b2fb96e49149a
 
 - `ENDLESS_MENU` установите значение `True`, если вы хотите, чтобы после отработки выбранного модуля опять появлялось меню
 - `WALLETS_TO_GENERATE_COUNT` количество генерируемых кошельков
+- `WALLET_APPLICATION` определяет с какими кошельками будет работать скрипт, принимаемые значения: argentx | braavos
 - `GENERATED_WALLETS_JSON_PATH` путь для сохранения сгенерированных кошельков в формате JSON
 - `DEPLOYED_WALLETS_TXT_PATH` путь для сохранения адресов успешно задеплоенных кошельков в текстовом файле
 - `DEPLOY_FAILED_WALLETS_JSON_PATH` путь для сохранения информации о неуспешно задеплоенных кошельках в формате JSON
