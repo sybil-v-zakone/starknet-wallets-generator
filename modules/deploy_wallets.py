@@ -11,6 +11,7 @@ from config import (
     GENERATED_WALLETS_JSON_PATH,
     DEPLOY_FAILED_WALLETS_JSON_PATH,
     DEPLOYED_WALLETS_TXT_PATH,
+    DEPLOYED_WALLETS_JSON_PATH,
     DEPLOY_SLEEP_DEVIATION_IN_SEC,
     WITHDRAW_FOR_DEPLOY_ETH_AMOUNT,
     CEX_WITHDRAW_FEE,
@@ -40,9 +41,18 @@ class DeployWallets:
         logger.info(f"Running deploy {WALLET_APPLICATION} wallets")
         generated_wallets = read_from_json(GENERATED_WALLETS_JSON_PATH)
         previous_deploy_failed_wallets = read_from_json(DEPLOY_FAILED_WALLETS_JSON_PATH, True)
+        previous_deploy_success_wallets = read_from_json(DEPLOYED_WALLETS_JSON_PATH, True)
+        previous_deploy_success_wallets_addresses = []
+
+        if isinstance(previous_deploy_success_wallets, list):
+            for d in previous_deploy_success_wallets:
+                if "address" in d:
+                    previous_deploy_success_wallets_addresses.append(d["address"])
 
         current_deploy_failed_wallets = list()
+        current_deploy_failed_addresses = list()
         current_deploy_success_wallets = list()
+        current_deploy_success_wallets_json = list()
 
         current_deploy_wallets = []
         if isinstance(generated_wallets, list):
@@ -59,6 +69,17 @@ class DeployWallets:
         proxies = read_from_txt(PROXIES_TXT_PATH)
         for index, wallet_json in enumerate(current_deploy_wallets, 1 - len(current_deploy_wallets)):
             wallet = Wallet(**wallet_json)
+
+            if wallet.address in previous_deploy_success_wallets_addresses:
+                logger.info(f"Wallet {wallet.address} already deployed. Skipping")
+                continue
+            if wallet.address in current_deploy_failed_addresses:
+                logger.info(f"Wallet {wallet.address} already handled. Skipping")
+                continue
+            if wallet.address in current_deploy_success_wallets:
+                logger.info(f"Wallet {wallet.address} already deployed. Skipping")
+                continue
+
             key_pair = KeyPair.from_private_key(int(wallet.private_key, 16))
             deployer = DeployWallet(proxy=proxies[index] if USE_PROXY else None)
 
@@ -71,6 +92,8 @@ class DeployWallets:
                     if deploy_attempt > CLIENT_ON_ERROR_TOTAL_TRIES:
                         logger.info("Reached maximum attempts for wallet deploy. Skipping")
                         current_deploy_failed_wallets.append(wallet_json)
+                        current_deploy_failed_addresses.append(wallet.address)
+                        write_to_json(DEPLOY_FAILED_WALLETS_JSON_PATH, current_deploy_failed_wallets)
                         break
 
                     logger.info(f"Running deploy for wallet {wallet.address}. Attempt {deploy_attempt}")
@@ -81,10 +104,14 @@ class DeployWallets:
                     )
                     if not is_deployed:
                         current_deploy_failed_wallets.append(wallet_json)
+                        write_to_json(DEPLOY_FAILED_WALLETS_JSON_PATH, current_deploy_failed_wallets)
                         break
                     else:
                         bar.next()
                         current_deploy_success_wallets.append(wallet.address)
+                        current_deploy_success_wallets_json.append(wallet)
+                        write_to_txt(DEPLOYED_WALLETS_TXT_PATH, [wallet.address])
+                        write_to_json(DEPLOYED_WALLETS_JSON_PATH, current_deploy_success_wallets_json)
                         break
                 except ClientError as e:
                     logger.error(
@@ -109,8 +136,8 @@ class DeployWallets:
             current_deploy_success_wallets.insert(0, str(datetime.now()))
             current_deploy_success_wallets.append("")
 
-        logger.info(f"Saving failed wallets to {DEPLOY_FAILED_WALLETS_JSON_PATH}")
-        write_to_json(DEPLOY_FAILED_WALLETS_JSON_PATH, current_deploy_failed_wallets)
-        logger.info(f"Saving success wallets to {DEPLOYED_WALLETS_TXT_PATH}")
-        write_to_txt(DEPLOYED_WALLETS_TXT_PATH, current_deploy_success_wallets)
+        # logger.info(f"Saving failed wallets to {DEPLOY_FAILED_WALLETS_JSON_PATH}")
+        # write_to_json(DEPLOY_FAILED_WALLETS_JSON_PATH, current_deploy_failed_wallets)
+        # logger.info(f"Saving success wallets to {DEPLOYED_WALLETS_TXT_PATH}")
+        # write_to_txt(DEPLOYED_WALLETS_TXT_PATH, current_deploy_success_wallets)
         logger.info("Saving state to files ended")

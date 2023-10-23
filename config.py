@@ -9,6 +9,7 @@ WALLET_APPLICATION = "argentx"
 
 GENERATED_WALLETS_JSON_PATH = "data/internal/generated_wallets.json"
 DEPLOYED_WALLETS_TXT_PATH = "data/internal/deployed_wallets.txt"
+DEPLOYED_WALLETS_JSON_PATH = "data/internal/deployed_wallets.json"
 DEPLOY_FAILED_WALLETS_JSON_PATH = "data/internal/deploy_failed_wallets.json"
 
 # путь к файлу с прокси
