@@ -109,7 +109,7 @@ class DeployWallets:
                     else:
                         bar.next()
                         current_deploy_success_wallets.append(wallet.address)
-                        current_deploy_success_wallets_json.append(wallet)
+                        current_deploy_success_wallets_json.append(wallet_json)
                         write_to_txt(DEPLOYED_WALLETS_TXT_PATH, [wallet.address])
                         write_to_json(DEPLOYED_WALLETS_JSON_PATH, current_deploy_success_wallets_json)
                         break
