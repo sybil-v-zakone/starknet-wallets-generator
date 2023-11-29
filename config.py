@@ -2,7 +2,7 @@ from starknet_py.net.models.chains import StarknetChainId
 
 ENDLESS_MENU = True
 
-WALLETS_TO_GENERATE_COUNT = 1
+WALLETS_TO_GENERATE_COUNT = 10
 
 # используется для деплоя кошельков. Принимаемые значения argentx | braavos
 WALLET_APPLICATION = "argentx"
@@ -47,3 +47,9 @@ CLIENT_ON_ERROR_SLEEP_IN_SEC = 20
 
 GAS_THRESHOLD = 40
 GAS_DELAY_RANGE = [10, 15]
+
+# Если вы хотите использовать моб.прокси ставить в True
+USE_MOBILE_PROXY = False
+
+# Ссылка на ваш моб.прокси
+IP_CHANGE_LINK = ""

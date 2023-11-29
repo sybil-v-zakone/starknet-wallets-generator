@@ -6,6 +6,7 @@ from loguru import logger
 from progress.bar import IncrementalBar
 from starknet_py.net.client_errors import ClientError
 from starknet_py.net.signer.stark_curve_signer import KeyPair
+from sdk.utils import change_mobile_ip
 
 from config import (
     GENERATED_WALLETS_JSON_PATH,
@@ -82,6 +83,8 @@ class DeployWallets:
 
             key_pair = KeyPair.from_private_key(int(wallet.private_key, 16))
             deployer = DeployWallet(proxy=proxies[index] if USE_PROXY else None)
+
+            change_mobile_ip()
 
             if USE_PROXY:
                 logger.info(f'Deploying with proxy: {proxies[index]}')
